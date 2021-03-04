@@ -1,5 +1,6 @@
 .customCard {
     margin: 30px !important;
+    padding: 0 !important;
 }
 
 .ui.container {

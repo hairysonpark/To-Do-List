@@ -2,12 +2,12 @@ import React from 'react';
 
 import '../styles/styles.css';
 
-class Card extends React.Component {
+class DoingCard extends React.Component {
     render() {
         return (
             <div class="ui vertical menu customCard">
                 <a class="item">
-                    <h4 class="ui header">Things to do</h4>
+                    <h4 class="ui header">Doing</h4>
                 </a>
                 <a class="item">
                     <h4 class="ui header">Sample List 1</h4>
@@ -18,12 +18,16 @@ class Card extends React.Component {
                     <p>Description 2</p>
                 </a>
                 <a class="item">
-                    <h4 class="ui header">Description 3</h4>
-                    <p>Description 3</p>
+                    <div class="ui fluid action green input">
+                        <input type="text" placeholder="I'm doing ..."></input>
+                        <button class="ui icon button">
+                            <i class="plus icon"></i>
+                        </button>
+                    </div>
                 </a>
             </div>
         )
     }
 }
 
-export default Card;
+export default DoingCard;
