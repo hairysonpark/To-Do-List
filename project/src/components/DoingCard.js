@@ -5,23 +5,23 @@ import '../styles/styles.css';
 class DoingCard extends React.Component {
     render() {
         return (
-            <div class="ui vertical menu customCard">
-                <a class="item">
-                    <h4 class="ui header">Doing</h4>
+            <div className="ui vertical menu customCard">
+                <a className="item">
+                    <h4 className="ui header">Doing</h4>
                 </a>
-                <a class="item">
-                    <h4 class="ui header">Sample List 1</h4>
+                <a className="item">
+                    <h4 className="ui header">Sample List 1</h4>
                     <p>Description 1</p>
                 </a>
-                <a class="item">
-                    <h4 class="ui header">Sample List 2</h4>
+                <a className="item">
+                    <h4 className="ui header">Sample List 2</h4>
                     <p>Description 2</p>
                 </a>
-                <a class="item">
-                    <div class="ui fluid action green input">
+                <a className="item">
+                    <div className="ui fluid action green input">
                         <input type="text" placeholder="I'm doing ..."></input>
-                        <button class="ui icon button">
-                            <i class="plus icon"></i>
+                        <button className="ui icon button">
+                            <i className="plus icon"></i>
                         </button>
                     </div>
                 </a>

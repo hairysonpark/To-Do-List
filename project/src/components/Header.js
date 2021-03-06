@@ -6,7 +6,7 @@ class Header extends React.Component {
             <div className="ui secondary pointing menu">
                 <a href="/" className="item">
                     <div>
-                        <i class="list icon"></i>
+                        <i className="list icon"></i>
                         To Do List
                     </div>
                 </a>
