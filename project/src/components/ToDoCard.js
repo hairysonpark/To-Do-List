@@ -3,6 +3,13 @@ import React from 'react';
 import '../styles/styles.css';
 
 class ToDoCard extends React.Component {
+    state = { inputText: '' }
+
+    onButtonSubmit = (event) => {
+        console.log(this.state.inputText);
+        this.setState({inputText: ''})
+    }
+
     render() {
         return (
             <div className="ui vertical menu customCard">
@@ -19,8 +26,14 @@ class ToDoCard extends React.Component {
                 </a>
                 <a className="item">
                     <div className="ui fluid action green input">
-                        <input type="text" placeholder="I'm gonna do ..."></input>
-                        <button className="ui icon button">
+                        <input 
+                            type="text" 
+                            placeholder="I'm gonna do ..."
+                            value={this.state.inputText}
+                            onChange={(e) => this.setState({inputText: e.target.value})}
+                            >
+                        </input>
+                        <button className="ui icon button" onClick={this.onButtonSubmit}>
                             <i className="plus icon"></i>
                         </button>
                     </div>
