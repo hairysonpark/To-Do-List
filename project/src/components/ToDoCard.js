@@ -1,31 +1,32 @@
 import React from 'react';
+import {Button, Checkbox, Icon, Input, Menu} from 'semantic-ui-react'
 
 import '../styles/styles.css';
 
 class ToDoCard extends React.Component {
-    state = { inputText: '' }
+    state = { inputText: '', tasks: ['Item 1','Item 2','Item 3'] }
 
     onButtonSubmit = (event) => {
+        console.log(this);
         console.log(this.state.inputText);
-        this.setState({inputText: ''})
+        this.setState({inputText: '', tasks: this.state.tasks.concat(this.state.inputText)});
     }
+
 
     render() {
         return (
-            <div className="ui vertical menu customCard">
-                <a className="item">
-                    <h4 className="ui header">Things to do</h4>
-                </a>
-                <a className="item">
-                    <h4 className="ui header">Sample List 1</h4>
-                    <p>Description 1</p>
-                </a>
-                <a className="item">
-                    <h4 className="ui header">Sample List 2</h4>
-                    <p>Description 2</p>
-                </a>
-                <a className="item">
-                    <div className="ui fluid action green input">
+            <Menu vertical onChange={this.onChange} className="customCard" activeIndex='1'>
+                <Menu.Item>
+                    <b>{this.props.listName}</b>
+                </Menu.Item>
+                {this.state.tasks.map((value, index, array) => 
+                {
+                    return <Menu.Item key={(value,index)}>
+                        <Checkbox label={value} />
+                        </Menu.Item>;
+                })}
+                <Menu.Item>
+                    <Input fluid action color='green'>
                         <input 
                             type="text" 
                             placeholder="I'm gonna do ..."
@@ -36,9 +37,9 @@ class ToDoCard extends React.Component {
                         <button className="ui icon button" onClick={this.onButtonSubmit}>
                             <i className="plus icon"></i>
                         </button>
-                    </div>
-                </a>
-            </div>
+                    </Input>
+                </Menu.Item>
+            </Menu>
         )
     }
 }

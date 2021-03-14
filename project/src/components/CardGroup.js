@@ -7,8 +7,8 @@ class CardGroup extends React.Component {
     render() {
         return (
             <div className="ui four column doubling stackable grid container"> 
-                <ToDoCard />
-                <DoingCard />
+                <ToDoCard listName='Things To Do'/>
+                <ToDoCard listName='Second List'/>
             </div>
         )
     }
