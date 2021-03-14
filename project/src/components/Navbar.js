@@ -1,6 +1,6 @@
 import React from 'react';
 
-class Header extends React.Component {
+class Navbar extends React.Component {
     render() {
         return (
             <div className="ui secondary pointing menu">
@@ -15,4 +15,4 @@ class Header extends React.Component {
     }
 }
 
-export default Header;
+export default Navbar;

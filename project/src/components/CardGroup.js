@@ -1,7 +1,6 @@
 import React from 'react';
 
 import ToDoCard from './ToDoCard';
-import DoingCard from './DoingCard';
 
 class CardGroup extends React.Component {
     render() {
