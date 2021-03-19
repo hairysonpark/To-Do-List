@@ -2,14 +2,14 @@ import React from 'react';
 import {Button, Checkbox, Icon, Input, Menu} from 'semantic-ui-react'
 
 import '../styles/styles.css';
+import Popup from './Popup';
 
 class ToDoCard extends React.Component {
-    state = { inputText: '', tasks: ['Item 1','Item 2','Item 3'] }
+    state = { tasks: [] }
 
-    onButtonSubmit = (event) => {
-        console.log(this);
-        console.log(this.state.inputText);
-        this.setState({inputText: '', tasks: this.state.tasks.concat(this.state.inputText)});
+    onButtonSubmit = (title, description) => {
+        let taskObject = {"title": title, "description": description}
+        this.setState({tasks: [...this.state.tasks, taskObject]});
     }
 
 
@@ -19,24 +19,21 @@ class ToDoCard extends React.Component {
                 <Menu.Item>
                     <b>{this.props.listName}</b>
                 </Menu.Item>
-                {this.state.tasks.map((value, index, array) => 
+                {this.state.tasks.map((task, index) => 
                 {
-                    return <Menu.Item key={(value,index)}>
-                        <Checkbox label={value} />
-                        </Menu.Item>;
+                    return <Menu.Item key={index}>
+                                <Checkbox label={
+                                    <div>
+                                        <h4>{task.title}</h4>
+                                        <p>{task.description}</p>
+                                    </div>
+                                    } 
+                                />
+                            </Menu.Item>;
                 })}
                 <Menu.Item>
                     <Input fluid action color='green'>
-                        <input 
-                            type="text" 
-                            placeholder="I'm gonna do ..."
-                            value={this.state.inputText}
-                            onChange={(e) => this.setState({inputText: e.target.value})}
-                            >
-                        </input>
-                        <button className="ui icon button" onClick={this.onButtonSubmit}>
-                            <i className="plus icon"></i>
-                        </button>
+                        <Popup onButtonSubmit={this.onButtonSubmit} />
                     </Input>
                 </Menu.Item>
             </Menu>
