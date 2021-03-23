@@ -8,18 +8,16 @@ class ToDoCard extends React.Component {
     state = { tasks: [] }
 
     onButtonSubmit = (title, description) => {
-        let taskObject = {"title": title, "description": description}
-        this.setState({tasks: [...this.state.tasks, taskObject]});
+        this.props.onDataSubmit(this.props.column.id, title, description)   // call CardGroup function
     }
-
 
     render() {
         return (
             <Menu vertical onChange={this.onChange} className="customCard" activeIndex='1'>
                 <Menu.Item>
-                    <b>{this.props.listName}</b>
+                    <b>{this.props.column.title}</b>
                 </Menu.Item>
-                {this.state.tasks.map((task, index) => 
+                {this.props.tasks.map((task, index) => 
                 {
                     return <Menu.Item key={index}>
                                 <Checkbox label={
