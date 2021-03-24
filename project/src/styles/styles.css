@@ -1,9 +1,25 @@
-.customCard {
-    margin: 30px !important;
-    padding: 0 !important;
+.root {
+    height: 100% !important;
 }
 
-.ui.container {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
+.customContainer {
+    background-image: url('https://images.pexels.com/photos/1103970/pexels-photo-1103970.jpeg?cs=srgb&dl=pexels-johannes-plenio-1103970.jpg&fm=jpg') !important;
+    background-attachment:fixed !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    height: 100% !important;
+}
+
+.customCard {
+    margin: 30px 0 0 40px !important;
+    padding: 10px !important;
+    background-color: #f6f6f6 !important;
+    width: 300px !important;
+}
+
+.customItem {
+    background-color: #fff !important;
+    border-radius: 5px !important;
+    margin-bottom: 10px !important;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px !important;
 }

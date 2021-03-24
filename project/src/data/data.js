@@ -3,7 +3,9 @@ let data = {
         'task-1': { id: 'task-1', title: 'Task-1 title', description: 'Task-1 description'},
         'task-2': { id: 'task-2', title: 'Task-2 title', description: 'Task-2 description'},
         'task-3': { id: 'task-3', title: 'Task-3 title', description: 'Task-3 description'},
-        'task-4': { id: 'task-4', title: 'Task-4 title', description: 'Task-4 description'}
+        'task-4': { id: 'task-4', title: 'Task-4 title', description: 'Task-4 description'},
+        'task-5': { id: 'task-5', title: 'Task-5 title', description: 'Task-5 description'},
+        'task-6': { id: 'task-6', title: 'Task-6 title', description: 'Task-6 description'}
     },
     columns: {
         'column-1': {
@@ -15,10 +17,15 @@ let data = {
             id: 'column-2',
             title: 'Doing',
             taskIds: ['task-3', 'task-4']
+        },
+        'column-3': {
+            id: 'column-3',
+            title: 'Done',
+            taskIds: ['task-5', 'task-6']
         }
     },
-    columnOrder: ['column-1', 'column-2'],
-    totalTasks: 4
+    columnOrder: ['column-1', 'column-2', 'column-3'],
+    totalTasks: 6
 }
 
 export default data;
