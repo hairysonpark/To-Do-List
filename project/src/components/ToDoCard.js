@@ -3,7 +3,8 @@ import { Button, Checkbox, Icon, Input, Menu } from "semantic-ui-react";
 import { Draggable } from "react-beautiful-dnd";
 
 import "../styles/styles.css";
-import Popup from "./Popup";
+import CreatePopup from "./CreatePopup";
+import EditPopup from "./EditPopup";
 
 class ToDoCard extends React.Component {
 	onButtonSubmit = (title, description) => {
@@ -30,16 +31,22 @@ class ToDoCard extends React.Component {
 									{...provided.dragHandleProps}
 									ref={provided.innerRef}
 								>
-									<Menu.Item className="customItem">
-										<Checkbox
-											label={
-												<div>
-													<h4>{task.title}</h4>
-													<p>{task.description}</p>
-												</div>
-											}
-										/>
-									</Menu.Item>
+									<EditPopup
+										task={task}
+										editRecord={this.props.editRecord}
+										deleteRecord={this.props.deleteRecord}
+									>
+										<Menu.Item className="customItem">
+											<Checkbox
+												label={
+													<div>
+														<h4>{task.title}</h4>
+														<p>{task.description}</p>
+													</div>
+												}
+											/>
+										</Menu.Item>
+									</EditPopup>
 								</div>
 							)}
 						</Draggable>
@@ -48,7 +55,7 @@ class ToDoCard extends React.Component {
 				{this.props.palceholderAtEndOfList}
 				<Menu.Item>
 					<Input fluid action color="green">
-						<Popup onButtonSubmit={this.onButtonSubmit} />
+						<CreatePopup onButtonSubmit={this.onButtonSubmit} />
 					</Input>
 				</Menu.Item>
 			</Menu>

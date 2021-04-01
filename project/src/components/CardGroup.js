@@ -28,7 +28,6 @@ class CardGroup extends React.Component {
 
 	componentDidUpdate() {
 		console.log(this.state); // Check the update after the state is updated
-
 	}
 
 	handleOnDragEnd = (result) => {
@@ -100,6 +99,54 @@ class CardGroup extends React.Component {
 		}
 	};
 
+	editRecord = (taskObject) => {
+		const newState = {
+			...this.state,
+			tasks: {
+				...this.state.tasks,
+				[taskObject.id]: taskObject
+			},
+		};
+		this.setState(newState);
+		console.log(this.state)
+	}
+
+	deleteRecord = (taskObject) => {
+		let columns = {...this.state.columns}
+		let columnId = ''
+
+		// find which column is the owner of the delete task
+		Object.keys(columns).map((column) => {
+			Object.keys(columns[column]).map((columnProperty) => {
+				if (columnProperty === 'taskIds') {
+					columns[column][columnProperty].map((taskId) => {
+						if (taskId === taskObject.id) {
+							columnId = column
+						}
+					})
+				}
+			})
+		})
+		
+		const newState = {
+			...this.state,
+			tasks: {
+				...this.state.tasks,
+				[taskObject.id]: {}		// clear the value, but the key still there
+			},
+			columns: {
+				...this.state.columns,
+				[columnId]: {
+					...this.state.columns[columnId],
+					// filter out a task when it find the target task id 
+					taskIds: [...this.state.columns[columnId].taskIds].filter(function(task){return task != taskObject.id})
+				}
+			}
+		};
+
+		this.setState(newState)		
+	}
+
 	render() {
 		return (
 			<div className="ui four column doubling stackable grid customContainer">
@@ -120,6 +167,8 @@ class CardGroup extends React.Component {
 											tasks={tasks}
 											onDataSubmit={this.onDataSubmit}
 											palceholderAtEndOfList={provided.placeholder}
+											editRecord={this.editRecord}
+											deleteRecord={this.deleteRecord}
 										/>
 									</div>
 								)}

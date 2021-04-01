@@ -5,6 +5,7 @@
 .customContainer {
     background-image: url('https://images.pexels.com/photos/1103970/pexels-photo-1103970.jpeg?cs=srgb&dl=pexels-johannes-plenio-1103970.jpg&fm=jpg') !important;
     background-attachment:fixed !important;
+    background-position: center !important;
     background-repeat: no-repeat !important;
     background-size: cover !important;
     height: 100% !important;
@@ -22,4 +23,5 @@
     border-radius: 5px !important;
     margin-bottom: 10px !important;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px !important;
+    cursor: pointer;
 }
