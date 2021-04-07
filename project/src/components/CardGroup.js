@@ -27,7 +27,7 @@ class CardGroup extends React.Component {
 	};
 
 	componentDidUpdate() {
-		console.log(this.state); // Check the update after the state is updated
+		// console.log(this.state); // Check the update after the state is updated
 	}
 
 	handleOnDragEnd = (result) => {
