@@ -37,14 +37,10 @@ class ToDoCard extends React.Component {
 										deleteRecord={this.props.deleteRecord}
 									>
 										<Menu.Item className="customItem">
-											<Checkbox
-												label={
-													<div>
-														<h4>{task.title}</h4>
-														<p>{task.description}</p>
-													</div>
-												}
-											/>
+										<div>
+										<h4><Checkbox label={task.title}/></h4>
+										<p>{task.description}</p>
+										</div>
 										</Menu.Item>
 									</EditPopup>
 								</div>
