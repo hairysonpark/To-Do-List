@@ -48,7 +48,7 @@ class ToDoCard extends React.Component {
 						</Draggable>
 					);
 				})}
-				{this.props.palceholderAtEndOfList}
+				{this.props.placeholderAtEndOfList}
 				<Menu.Item>
 					<Input fluid action color="green">
 						<CreatePopup onButtonSubmit={this.onButtonSubmit} />

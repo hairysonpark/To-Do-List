@@ -50,7 +50,7 @@ class EditPopup extends React.Component {
 								<label>New Title</label>
 								<input
 									autoFocus
-									placeholder="Enter a tilte"
+									placeholder="Enter a title"
 									value={this.state.title}
 									onChange={(e) => this.setState({ title: e.target.value })}
 									onKeyPress={(e) => {

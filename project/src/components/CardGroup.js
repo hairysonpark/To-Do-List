@@ -49,7 +49,7 @@ class CardGroup extends React.Component {
 		const sourceColumn = this.state.columns[source.droppableId];
 		const destinationColumn = this.state.columns[destination.droppableId];
 		const newSourceTaskIds = Array.from(sourceColumn.taskIds);
-		const newDestinaionTaskIds = Array.from(destinationColumn.taskIds);
+		const newDestinationTaskIds = Array.from(destinationColumn.taskIds);
 
 		// If the item is drag and drop on the same column
 		if (
@@ -75,7 +75,7 @@ class CardGroup extends React.Component {
 		} // If the item is drag and drop on different column
 		else {
 			newSourceTaskIds.splice(source.index, 1);
-			newDestinaionTaskIds.splice(destination.index, 0, draggableId);
+			newDestinationTaskIds.splice(destination.index, 0, draggableId);
 
 			const newSourceColumn = {
 				...sourceColumn,
@@ -84,7 +84,7 @@ class CardGroup extends React.Component {
 
 			const newDestinationColumn = {
 				...destinationColumn,
-				taskIds: newDestinaionTaskIds,
+				taskIds: newDestinationTaskIds,
 			};
 
 			const newState = {
@@ -166,7 +166,7 @@ class CardGroup extends React.Component {
 											column={column}
 											tasks={tasks}
 											onDataSubmit={this.onDataSubmit}
-											palceholderAtEndOfList={provided.placeholder}
+											placeholderAtEndOfList={provided.placeholder}
 											editRecord={this.editRecord}
 											deleteRecord={this.deleteRecord}
 										/>
