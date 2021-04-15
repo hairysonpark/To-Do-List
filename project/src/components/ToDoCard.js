@@ -1,5 +1,13 @@
 import React from "react";
-import { Button, Checkbox, Icon, Input, Menu } from "semantic-ui-react";
+import {
+	Button,
+	Checkbox,
+	Icon,
+	Input,
+	Menu,
+	Dropdown,
+	Confirm,
+} from "semantic-ui-react";
 import { Draggable } from "react-beautiful-dnd";
 
 import "../styles/styles.css";
@@ -7,9 +15,16 @@ import CreatePopup from "./CreatePopup";
 import EditPopup from "./EditPopup";
 
 class ToDoCard extends React.Component {
+	state = { deleteCardConfirmOpen: false };
+
 	onButtonSubmit = (title, description) => {
 		this.props.onDataSubmit(this.props.column.id, title, description); // call CardGroup function
 	};
+
+	deleteCard = () => {
+		this.setState({ deleteCardConfirmOpen: false })
+		this.props.deleteCard()
+	}
 
 	render() {
 		return (
@@ -20,7 +35,25 @@ class ToDoCard extends React.Component {
 				activeIndex="1"
 			>
 				<Menu.Item>
-					<b>{this.props.column.title}</b>
+					<div className="itemTitleRow">
+						<b>{this.props.column.title}</b>
+						<Dropdown>
+							<Dropdown.Menu>
+								<Dropdown.Item
+									icon="trash"
+									text="Delete"
+									onClick={() => this.setState({ deleteCardConfirmOpen: true })}
+								/>
+								<Confirm
+									open={this.state.deleteCardConfirmOpen}
+									onCancel={() =>
+										this.setState({ deleteCardConfirmOpen: false })
+									}
+									onConfirm={() => this.deleteCard()}
+								/>
+							</Dropdown.Menu>
+						</Dropdown>
+					</div>
 				</Menu.Item>
 				{this.props.tasks.map((task, index) => {
 					return (
@@ -37,10 +70,17 @@ class ToDoCard extends React.Component {
 										deleteRecord={this.props.deleteRecord}
 									>
 										<Menu.Item className="customItem">
-										<div>
-										<h4><Checkbox label={task.title}/></h4>
-										<p>{task.description}</p>
-										</div>
+											<div>
+												<h4 className="itemTitleRow">
+													<Checkbox label={task.title} />
+													<Icon
+														name="delete"
+														className="deleteRecordIcon"
+														onClick={() => this.props.deleteRecord(task)}
+													/>
+												</h4>
+												<p>{task.description}</p>
+											</div>
 										</Menu.Item>
 									</EditPopup>
 								</div>

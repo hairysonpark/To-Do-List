@@ -25,7 +25,11 @@ let data = {
         }
     },
     columnOrder: ['column-1', 'column-2', 'column-3'],
-    totalTasks: 6
+    totalTasks: 6,
+
+    // regular state data
+    createCardButtonOpen: false,
+    newListName: ''
 }
 
 export default data;

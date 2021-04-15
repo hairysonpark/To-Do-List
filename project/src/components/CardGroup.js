@@ -1,5 +1,6 @@
 import React from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { Button, Icon, Form } from "semantic-ui-react";
 
 import ToDoCard from "./ToDoCard";
 import data from "../data/data";
@@ -27,7 +28,7 @@ class CardGroup extends React.Component {
 	};
 
 	componentDidUpdate() {
-		// console.log(this.state); // Check the update after the state is updated
+		console.log(this.state); // Check the update after the state is updated
 	}
 
 	handleOnDragEnd = (result) => {
@@ -104,48 +105,78 @@ class CardGroup extends React.Component {
 			...this.state,
 			tasks: {
 				...this.state.tasks,
-				[taskObject.id]: taskObject
+				[taskObject.id]: taskObject,
 			},
 		};
 		this.setState(newState);
-		console.log(this.state)
-	}
+		console.log(this.state);
+	};
 
 	deleteRecord = (taskObject) => {
-		let columns = {...this.state.columns}
-		let columnId = ''
+		let columns = { ...this.state.columns };
+		let columnId = "";
 
 		// find which column is the owner of the delete task
 		Object.keys(columns).map((column) => {
 			Object.keys(columns[column]).map((columnProperty) => {
-				if (columnProperty === 'taskIds') {
+				if (columnProperty === "taskIds") {
 					columns[column][columnProperty].map((taskId) => {
 						if (taskId === taskObject.id) {
-							columnId = column
+							columnId = column;
 						}
-					})
+					});
 				}
-			})
-		})
-		
+			});
+		});
+
 		const newState = {
 			...this.state,
 			tasks: {
 				...this.state.tasks,
-				[taskObject.id]: {}		// clear the value, but the key still there
+				[taskObject.id]: {}, // clear the value, but the key still there
 			},
 			columns: {
 				...this.state.columns,
 				[columnId]: {
 					...this.state.columns[columnId],
-					// filter out a task when it find the target task id 
-					taskIds: [...this.state.columns[columnId].taskIds].filter(function(task){return task != taskObject.id})
-				}
-			}
+					// filter out a task when it find the target task id
+					taskIds: [...this.state.columns[columnId].taskIds].filter(function (
+						task
+					) {
+						return task != taskObject.id;
+					}),
+				},
+			},
 		};
 
-		this.setState(newState)		
+		this.setState(newState);
+	};
+
+	deleteCard = () => {
+		console.log("Hellow")
 	}
+
+	addNewListItem = () => {
+		/* add new item to the column order array */
+		let newColumnOrder = [...this.state.columnOrder, this.state.newListName]
+
+		const newState = {
+			...this.state,
+			columns: {
+				...this.state.columns,
+				[this.state.newListName]: {
+					id: this.state.newListName,
+					title: `${this.state.newListName}`,
+					taskIds: [],
+				},
+			},
+			columnOrder: newColumnOrder,
+			createCardButtonOpen: false,
+			newListName: ''
+		};
+		
+		this.setState(newState)
+	};
 
 	render() {
 		return (
@@ -162,19 +193,61 @@ class CardGroup extends React.Component {
 								{(provided) => (
 									<div {...provided.droppableProps} ref={provided.innerRef}>
 										<ToDoCard
-                                            className="card"
+											className="card"
 											column={column}
 											tasks={tasks}
 											onDataSubmit={this.onDataSubmit}
 											placeholderAtEndOfList={provided.placeholder}
 											editRecord={this.editRecord}
 											deleteRecord={this.deleteRecord}
+											deleteCard={this.deleteCard}
 										/>
 									</div>
 								)}
 							</Droppable>
 						);
 					})}
+					{!this.state.createCardButtonOpen ? (
+						<Button
+							icon
+							labelPosition="right"
+							className="createNewCardFieldPos"
+							onClick={() => this.setState({ createCardButtonOpen: true })}
+						>
+							Create New Card
+							<Icon name="plus" />
+						</Button>
+					) : (
+						<Form className="createNewCardForm">
+							<Form.Field>
+								<input
+									autoFocus
+									placeholder="List name"
+									onChange={(e) =>
+										this.setState({ newListName: e.target.value })
+									}
+									value={this.state.newListName}
+								/>
+								<Button
+									className="createNewCardFormButton"
+									icon
+									positive
+									labelPosition="right"
+									onClick={() => this.addNewListItem()}
+								>
+									Add
+									<Icon name="plus" />
+								</Button>
+
+								<Icon
+									className="createNewCardExitIcon"
+									name="close"
+									size="large"
+									onClick={() => this.setState({ createCardButtonOpen: false })}
+								/>
+							</Form.Field>
+						</Form>
+					)}
 				</DragDropContext>
 			</div>
 		);

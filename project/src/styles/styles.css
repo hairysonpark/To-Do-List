@@ -41,3 +41,46 @@
 .customMenuItemIcon {
     margin-right: 20px !important;
 }
+
+.createNewCardFieldPos {
+    height: 2.8em;
+    width: 18em;
+    border-radius: 2px !important;
+    position: relative;
+    top: 2.2em;
+    margin-left: 3.9em !important;
+}
+
+.createNewCardForm {
+    background-color: #f6f6f6;
+    height: 8em;
+    width: 21.2em;
+    border-radius: 3px !important;
+    position: relative;
+    top: 2.2em;
+    left: 4em ;
+    padding: 1em
+}
+
+.createNewCardFormButton {
+    margin-top: 0.7em !important
+}
+
+.createNewCardExitIcon:hover {
+    cursor: pointer;
+}
+
+.itemTitleRow {
+    display: flex;
+    justify-content: space-between;
+}
+
+.deleteRecordIcon {
+    border-radius: 50%;
+    width: 1.5em !important;
+    height: 1.5em !important;
+}
+
+.deleteRecordIcon:hover {
+    background-color: rgb(228, 228, 228);
+}

@@ -85,12 +85,12 @@ class EditPopup extends React.Component {
 					>
 						Back
 					</Button>
-					<Button
+					{/* <Button
 						content="Delete"
 						icon="trash alternate"
 						color="red"
 						onClick={() => this.setState({ secondOpen: true })}
-					/>
+					/> */}
 					<Button
 						content="Finish"
 						labelPosition="right"
