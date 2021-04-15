@@ -22,9 +22,9 @@ class ToDoCard extends React.Component {
 	};
 
 	deleteCard = () => {
-		this.setState({ deleteCardConfirmOpen: false })
-		this.props.deleteCard()
-	}
+		this.setState({ deleteCardConfirmOpen: false });
+		this.props.deleteCard(this.props.column);
+	};
 
 	render() {
 		return (
@@ -43,13 +43,6 @@ class ToDoCard extends React.Component {
 									icon="trash"
 									text="Delete"
 									onClick={() => this.setState({ deleteCardConfirmOpen: true })}
-								/>
-								<Confirm
-									open={this.state.deleteCardConfirmOpen}
-									onCancel={() =>
-										this.setState({ deleteCardConfirmOpen: false })
-									}
-									onConfirm={() => this.deleteCard()}
 								/>
 							</Dropdown.Menu>
 						</Dropdown>
@@ -94,6 +87,16 @@ class ToDoCard extends React.Component {
 						<CreatePopup onButtonSubmit={this.onButtonSubmit} />
 					</Input>
 				</Menu.Item>
+				
+				{/* Is hidden by default. Will trigger when open is set to true 
+				  * Click on the dropdown menu -> delete will set open to true	
+				  */}
+				<Confirm
+					open={this.state.deleteCardConfirmOpen}
+					onCancel={() => this.setState({ deleteCardConfirmOpen: false })}
+					onConfirm={() => this.deleteCard()}
+					content='Are you sure you want to delete this column?'
+				/>
 			</Menu>
 		);
 	}

@@ -152,8 +152,23 @@ class CardGroup extends React.Component {
 		this.setState(newState);
 	};
 
-	deleteCard = () => {
-		console.log("Hellow")
+	deleteCard = (column) => {
+		/* Copy the entire state object */
+		const newState = {
+			...this.state
+		};
+
+		/* Delete the object in data.js-> columns -> object */
+		delete newState.columns[column.id]
+
+		/* Find out this column id is corrspond to which index in the columnOrder array */
+		const indexOfColumn = newState.columnOrder.indexOf(column.id)
+
+		/* Remove the column id in columnOrder by its index */
+		newState.columnOrder.splice(indexOfColumn, 1)
+
+		/* Update state */
+		this.setState(newState);
 	}
 
 	addNewListItem = () => {
