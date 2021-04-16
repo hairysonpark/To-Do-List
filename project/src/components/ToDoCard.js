@@ -15,7 +15,7 @@ import CreatePopup from "./CreatePopup";
 import EditPopup from "./EditPopup";
 
 class ToDoCard extends React.Component {
-	state = { optionsDropdownOpen: false, showCompleteTasks: false };
+	state = { deleteCardConfirmOpen: false };
 
 	onButtonSubmit = (title, description) => {
 		this.props.onDataSubmit(this.props.column.id, title, description); // call CardGroup function
@@ -48,8 +48,7 @@ class ToDoCard extends React.Component {
 						</Dropdown>
 					</div>
 				</Menu.Item>
-				{ /* Display all completed tasks */
-				this.props.tasks.filter( (task) => this.state.showCompleteTasks || task.done === 'false').map((task, index) => {
+				{this.props.tasks.map((task, index) => {
 					return (
 						<Draggable draggableId={task.id} index={index} key={task.id}>
 							{(provided) => (
@@ -93,8 +92,8 @@ class ToDoCard extends React.Component {
 				  * Click on the dropdown menu -> delete will set open to true	
 				  */}
 				<Confirm
-					open={this.state.optionsDropdownOpen}
-					onCancel={() => this.setState({ optionsDropdownOpen: false })}
+					open={this.state.deleteCardConfirmOpen}
+					onCancel={() => this.setState({ deleteCardConfirmOpen: false })}
 					onConfirm={() => this.deleteCard()}
 					content='Are you sure you want to delete this column?'
 				/>
