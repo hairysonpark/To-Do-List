@@ -49,7 +49,7 @@ class ToDoCard extends React.Component {
 					</div>
 				</Menu.Item>
 				{ /* Display all completed tasks */
-				this.props.tasks.filter( (task) => showCompleteTasks || task.done === 'false').map((task, index) => {
+				this.props.tasks.filter( (task) => this.props.showCompleteTasks || task.done === 'false').map((task, index) => {
 					return (
 						<Draggable draggableId={task.id} index={index} key={task.id}>
 							{(provided) => (
