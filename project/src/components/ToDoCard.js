@@ -15,7 +15,7 @@ import CreatePopup from "./CreatePopup";
 import EditPopup from "./EditPopup";
 
 class ToDoCard extends React.Component {
-	state = { deleteCardConfirmOpen: false };
+	state = { deleteCardConfirmOpen: false, showCompleteTasks: false };
 
 	onButtonSubmit = (title, description) => {
 		this.props.onDataSubmit(this.props.column.id, title, description); // call CardGroup function
