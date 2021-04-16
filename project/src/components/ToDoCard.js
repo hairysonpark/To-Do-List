@@ -73,6 +73,11 @@ class ToDoCard extends React.Component {
 										<Menu.Item className="customItem">
 											<div>
 												<h4 className="itemTitleRow">
+													{ /* TODOs:
+															refactor into separate component
+															change state with onCheck
+															make checkbox match the 'done' field of the task
+													*/}
 													<Checkbox label={task.title} />
 													<Icon
 														name="delete"
