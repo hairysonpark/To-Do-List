@@ -9,7 +9,7 @@ import "../styles/styles.css";
 class CardGroup extends React.Component {
 	state = data; // state is pointing to the centralized data file
 
-	onDataSubmit = (columnId, title, description) => {
+	onDataSubmit = (columnId, title, description, done = 'false') => {
 		let currentTaskTotal = this.state.totalTasks; // Get total number of tasks
 		let newTaskId = "task-" + (currentTaskTotal + 1); // Create new task id. e.g., task-5
 		let newTaskObject = {
@@ -17,6 +17,7 @@ class CardGroup extends React.Component {
 			id: newTaskId,
 			title: title,
 			description: description,
+			done: done,
 		};
 
 		let entireObjectCopy = { ...this.state }; // Copy entire data structure to a new variable. dummy way, but it works
