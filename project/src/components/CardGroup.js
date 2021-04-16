@@ -161,7 +161,7 @@ class CardGroup extends React.Component {
 		/* Delete the object in data.js-> columns -> object */
 		delete newState.columns[column.id]
 
-		/* Find out this column id is corrspond to which index in the columnOrder array */
+		/* Find out this column id is correspond to which index in the columnOrder array */
 		const indexOfColumn = newState.columnOrder.indexOf(column.id)
 
 		/* Remove the column id in columnOrder by its index */
