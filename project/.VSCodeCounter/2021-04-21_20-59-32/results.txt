@@ -1,0 +1,61 @@
+Date : 2021-04-21 20:59:32
+Directory : c:\Users\sek\Desktop\To-Do-List\project
+Total : 24 files,  18609 codes, 73 comments, 207 blanks, all 18889 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| JSON       |          3 |     17,346 |          0 |          3 |     17,349 |
+| JavaScript |         17 |      1,095 |         50 |        150 |      1,295 |
+| CSS        |          2 |         98 |          0 |         19 |        117 |
+| Markdown   |          1 |         38 |          0 |         33 |         71 |
+| HTML       |          1 |         32 |         23 |          2 |         57 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++-------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                  | files      | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                     |         24 |     18,609 |         73 |        207 |     18,889 |
+| public                                                                                                |          2 |         57 |         23 |          3 |         83 |
+| src                                                                                                   |         19 |      1,193 |         50 |        169 |      1,412 |
+| src\components                                                                                        |         14 |        936 |         46 |        125 |      1,107 |
+| src\components\backgroundImage                                                                        |          7 |        212 |          6 |         39 |        257 |
+| src\components\backgroundImage\apis                                                                   |          1 |          7 |          0 |          1 |          8 |
+| src\components\backgroundImage\components                                                             |          6 |        205 |          6 |         38 |        249 |
+| src\data                                                                                              |          1 |         32 |          1 |          2 |         35 |
+| src\firebase                                                                                          |          2 |        131 |          3 |         22 |        156 |
+| src\styles                                                                                            |          1 |         89 |          0 |         18 |        107 |
++-------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                                              | language   | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| c:\Users\sek\Desktop\To-Do-List\project\README.md                                                     | Markdown   |         38 |          0 |         33 |         71 |
+| c:\Users\sek\Desktop\To-Do-List\project\package-lock.json                                             | JSON       |     17,277 |          0 |          1 |     17,278 |
+| c:\Users\sek\Desktop\To-Do-List\project\package.json                                                  | JSON       |         44 |          0 |          1 |         45 |
+| c:\Users\sek\Desktop\To-Do-List\project\public\index.html                                             | HTML       |         32 |         23 |          2 |         57 |
+| c:\Users\sek\Desktop\To-Do-List\project\public\manifest.json                                          | JSON       |         25 |          0 |          1 |         26 |
+| c:\Users\sek\Desktop\To-Do-List\project\src\components\App.js                                         | JavaScript |         16 |          0 |          4 |         20 |
+| c:\Users\sek\Desktop\To-Do-List\project\src\components\CardGroup.js                                   | JavaScript |        285 |         29 |         39 |        353 |
+| c:\Users\sek\Desktop\To-Do-List\project\src\components\CreatePopup.js                                 | JavaScript |         74 |          0 |          5 |         79 |
+| c:\Users\sek\Desktop\To-Do-List\project\src\components\EditPopup.js                                   | JavaScript |        117 |          5 |         11 |        133 |
+| c:\Users\sek\Desktop\To-Do-List\project\src\components\NavSidebar.js                                  | JavaScript |        111 |          5 |         15 |        131 |
+| c:\Users\sek\Desktop\To-Do-List\project\src\components\Navbar.js                                      | JavaScript |         24 |          0 |          4 |         28 |
+| c:\Users\sek\Desktop\To-Do-List\project\src\components\ToDoCard.js                                    | JavaScript |         97 |          1 |          8 |        106 |
+| c:\Users\sek\Desktop\To-Do-List\project\src\components\backgroundImage\apis\unsplash.js               | JavaScript |          7 |          0 |          1 |          8 |
+| c:\Users\sek\Desktop\To-Do-List\project\src\components\backgroundImage\components\ImageCard.js        | JavaScript |         31 |          0 |         11 |         42 |
+| c:\Users\sek\Desktop\To-Do-List\project\src\components\backgroundImage\components\ImageList.css       | CSS        |          9 |          0 |          1 |         10 |
+| c:\Users\sek\Desktop\To-Do-List\project\src\components\backgroundImage\components\ImageList.js        | JavaScript |         14 |          1 |          3 |         18 |
+| c:\Users\sek\Desktop\To-Do-List\project\src\components\backgroundImage\components\ImageSearchModal.js | JavaScript |         81 |          5 |         10 |         96 |
+| c:\Users\sek\Desktop\To-Do-List\project\src\components\backgroundImage\components\PhotoSearch.js      | JavaScript |         25 |          0 |          6 |         31 |
+| c:\Users\sek\Desktop\To-Do-List\project\src\components\backgroundImage\components\SearchBar.js        | JavaScript |         45 |          0 |          7 |         52 |
+| c:\Users\sek\Desktop\To-Do-List\project\src\data\data.js                                              | JavaScript |         32 |          1 |          2 |         35 |
+| c:\Users\sek\Desktop\To-Do-List\project\src\firebase\firebaseConfig.js                                | JavaScript |         11 |          1 |          4 |         16 |
+| c:\Users\sek\Desktop\To-Do-List\project\src\firebase\index.js                                         | JavaScript |        120 |          2 |         18 |        140 |
+| c:\Users\sek\Desktop\To-Do-List\project\src\index.js                                                  | JavaScript |          5 |          0 |          2 |          7 |
+| c:\Users\sek\Desktop\To-Do-List\project\src\styles\styles.css                                         | CSS        |         89 |          0 |         18 |        107 |
+| Total                                                                                                 |            |     18,609 |         73 |        207 |     18,889 |
++-------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+

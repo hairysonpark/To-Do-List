@@ -1,15 +1,90 @@
 import React from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { Button, Icon, Form } from "semantic-ui-react";
+import { Button, Icon, Form, Dimmer, Loader } from "semantic-ui-react";
 
 import ToDoCard from "./ToDoCard";
 import data from "../data/data";
 import "../styles/styles.css";
 
-class CardGroup extends React.Component {
-	state = data; // state is pointing to the centralized data file
+const emptyTemplate = {
+	tasks: {},
+	columns: {},
+	columnOrder: [],
+	totalTasks: 0,
+	createCardButtonOpen: false,
+	newListName: "",
+	imageURL:
+		"https://images.pexels.com/photos/1103970/pexels-photo-1103970.jpeg?cs=srgb&dl=pexels-johannes-plenio-1103970.jpg&fm=jpg",
+};
 
-	onDataSubmit = (columnId, title, description) => {
+class CardGroup extends React.Component {
+	state = null; // state is pointing to the centralized data file
+
+	/* Initialize empty object to the state before render() method invoked */
+	UNSAFE_componentWillMount() {
+		this.setState(emptyTemplate);
+		this.dimmerActive = true;
+	}
+
+	/* New props will be passed to this component.
+	 * Update the state with nextProps
+	 * Use the following if statement to prevent infinite loop
+	 */
+	UNSAFE_componentWillReceiveProps = (nextProps) => {
+		/* When data object passed from firebase and send it as a props to this component
+		 * set this new object to the state
+		 */
+		if (this.props.firebaseData !== nextProps.firebaseData) {
+			/* User signed in with Google */
+			if (!nextProps.userSignedOutWithGoogle) {
+				/* User has data in the firestore */
+				if (nextProps.firebaseData !== undefined) {
+					this.setState(nextProps.firebaseData);
+				} else if (
+					/* User has create something but nothing was found in the firestore*/
+					this.state !== emptyTemplate &&
+					nextProps.firebaseData === undefined
+				) {
+					this.props.firebaseSetDataFunc(this.state);
+				}
+			}
+			this.dimmerActive = false;
+		}
+	};
+
+	/* If the user click the sign out button in firebase's index.js,
+	 * The sign out button function will sent a logout signal to NavSidebar and re-render
+	 * The signal will then pass to this component as a prop and update this component
+	 * componentDidUpdate will be triggered. The state will be set to empty.
+	 * The otter if statement is for preventing infinite loop
+	 */
+	componentDidUpdate = (prevState) => {
+		if (
+			prevState.userSignedOutWithGoogle !== this.props.userSignedOutWithGoogle
+		) {
+			if (this.props.userSignedOutWithGoogle) {
+				this.setState({
+					tasks: {},
+					columns: {},
+					columnOrder: [],
+					totalTasks: 0,
+					createCardButtonOpen: false,
+					newListName: "",
+				});
+			}
+
+			/* If no user is signed in, disable the dimmer since we are not able to
+			 * deactivate the dimmer in UNSAFE_componentWillReceiveProps because
+			 * this function will not be invoked due to the fact that no nextProp
+			 * will be passed in to the component
+			 */
+			if (this.props.userSignedOutWithGoogle === true) {
+				this.dimmerActive = false;
+			}
+		}
+	};
+
+	onDataSubmit = async (columnId, title, description) => {
 		let currentTaskTotal = this.state.totalTasks; // Get total number of tasks
 		let newTaskId = "task-" + (currentTaskTotal + 1); // Create new task id. e.g., task-5
 		let newTaskObject = {
@@ -25,13 +100,14 @@ class CardGroup extends React.Component {
 		entireObjectCopy.totalTasks = ++currentTaskTotal; // Increment the total number of tasks
 
 		this.setState({ ...entireObjectCopy }); // Destructure the object and update
+		await this.props.firebaseSetDataFunc(entireObjectCopy);
 	};
 
 	componentDidUpdate() {
-		console.log(this.state); // Check the update after the state is updated
+		this.setState(this.state);
 	}
 
-	handleOnDragEnd = (result) => {
+	handleOnDragEnd = async (result) => {
 		const { destination, source, draggableId } = result;
 
 		// If the item is drag and drop outside of the expected area
@@ -73,6 +149,7 @@ class CardGroup extends React.Component {
 				},
 			};
 			this.setState(newState);
+			await this.props.firebaseSetDataFunc(newState);
 		} // If the item is drag and drop on different column
 		else {
 			newSourceTaskIds.splice(source.index, 1);
@@ -97,10 +174,11 @@ class CardGroup extends React.Component {
 				},
 			};
 			this.setState(newState);
+			await this.props.firebaseSetDataFunc(newState);
 		}
 	};
 
-	editRecord = (taskObject) => {
+	editRecord = async (taskObject) => {
 		const newState = {
 			...this.state,
 			tasks: {
@@ -109,10 +187,25 @@ class CardGroup extends React.Component {
 			},
 		};
 		this.setState(newState);
-		console.log(this.state);
+		await this.props.firebaseSetDataFunc(newState);
 	};
 
-	deleteRecord = (taskObject) => {
+	editTitle = async (taskObject) => {
+		const newState = {
+			...this.state,
+			columns: {
+				...this.state.columns,
+				[taskObject.id]: {
+					...this.state.columns[taskObject.id],
+					title: taskObject.title,
+				},
+			},
+		};
+		this.setState(newState);
+		await this.props.firebaseSetDataFunc(newState);
+	};
+
+	deleteRecord = async (taskObject) => {
 		let columns = { ...this.state.columns };
 		let columnId = "";
 
@@ -150,30 +243,32 @@ class CardGroup extends React.Component {
 		};
 
 		this.setState(newState);
+		await this.props.firebaseSetDataFunc(newState);
 	};
 
-	deleteCard = (column) => {
+	deleteCard = async (column) => {
 		/* Copy the entire state object */
 		const newState = {
-			...this.state
+			...this.state,
 		};
 
 		/* Delete the object in data.js-> columns -> object */
-		delete newState.columns[column.id]
+		delete newState.columns[column.id];
 
 		/* Find out this column id is corrspond to which index in the columnOrder array */
-		const indexOfColumn = newState.columnOrder.indexOf(column.id)
+		const indexOfColumn = newState.columnOrder.indexOf(column.id);
 
 		/* Remove the column id in columnOrder by its index */
-		newState.columnOrder.splice(indexOfColumn, 1)
+		newState.columnOrder.splice(indexOfColumn, 1);
 
 		/* Update state */
 		this.setState(newState);
-	}
+		await this.props.firebaseSetDataFunc(newState);
+	};
 
-	addNewListItem = () => {
+	addNewListItem = async () => {
 		/* add new item to the column order array */
-		let newColumnOrder = [...this.state.columnOrder, this.state.newListName]
+		let newColumnOrder = [...this.state.columnOrder, this.state.newListName];
 
 		const newState = {
 			...this.state,
@@ -187,15 +282,61 @@ class CardGroup extends React.Component {
 			},
 			columnOrder: newColumnOrder,
 			createCardButtonOpen: false,
-			newListName: ''
+			newListName: "",
 		};
-		
-		this.setState(newState)
+
+		this.setState(newState);
+		await this.props.firebaseSetDataFunc(newState);
+	};
+
+	renderCreateNewCardButton = () => {
+		return !this.state.createCardButtonOpen ? (
+			<Button
+				icon
+				labelPosition="right"
+				className="createNewCardFieldPos"
+				onClick={() => this.setState({ createCardButtonOpen: true })}
+			>
+				Create New Card
+				<Icon name="plus" />
+			</Button>
+		) : (
+			<Form className="createNewCardForm">
+				<Form.Field>
+					<input
+						autoFocus
+						placeholder="List name"
+						onChange={(e) => this.setState({ newListName: e.target.value })}
+						value={this.state.newListName}
+					/>
+					<Button
+						className="createNewCardFormButton"
+						icon
+						positive
+						labelPosition="right"
+						onClick={() => this.addNewListItem()}
+					>
+						Add
+						<Icon name="plus" />
+					</Button>
+
+					<Icon
+						className="createNewCardExitIcon"
+						name="close"
+						size="large"
+						onClick={() => this.setState({ createCardButtonOpen: false })}
+					/>
+				</Form.Field>
+			</Form>
+		);
 	};
 
 	render() {
 		return (
 			<div className="ui four column doubling stackable grid customContainer">
+				<Dimmer inverted active={this.dimmerActive}>
+					<Loader>Loading</Loader>
+				</Dimmer>
 				<DragDropContext onDragEnd={this.handleOnDragEnd}>
 					{this.state.columnOrder.map((columnId) => {
 						const column = this.state.columns[columnId];
@@ -214,6 +355,7 @@ class CardGroup extends React.Component {
 											onDataSubmit={this.onDataSubmit}
 											placeholderAtEndOfList={provided.placeholder}
 											editRecord={this.editRecord}
+											editTitle={this.editTitle}
 											deleteRecord={this.deleteRecord}
 											deleteCard={this.deleteCard}
 										/>
@@ -222,47 +364,7 @@ class CardGroup extends React.Component {
 							</Droppable>
 						);
 					})}
-					{!this.state.createCardButtonOpen ? (
-						<Button
-							icon
-							labelPosition="right"
-							className="createNewCardFieldPos"
-							onClick={() => this.setState({ createCardButtonOpen: true })}
-						>
-							Create New Card
-							<Icon name="plus" />
-						</Button>
-					) : (
-						<Form className="createNewCardForm">
-							<Form.Field>
-								<input
-									autoFocus
-									placeholder="List name"
-									onChange={(e) =>
-										this.setState({ newListName: e.target.value })
-									}
-									value={this.state.newListName}
-								/>
-								<Button
-									className="createNewCardFormButton"
-									icon
-									positive
-									labelPosition="right"
-									onClick={() => this.addNewListItem()}
-								>
-									Add
-									<Icon name="plus" />
-								</Button>
-
-								<Icon
-									className="createNewCardExitIcon"
-									name="close"
-									size="large"
-									onClick={() => this.setState({ createCardButtonOpen: false })}
-								/>
-							</Form.Field>
-						</Form>
-					)}
+					{this.renderCreateNewCardButton()}
 				</DragDropContext>
 			</div>
 		);

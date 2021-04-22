@@ -1,13 +1,21 @@
 .root {
     height: 100% !important;
+    overflow: auto;
 }
 
 .customSidebar {
     height: 100% !important;
+    overflow: auto;
 }
 
 .customPusher {
     height: 100% !important;
+    overflow: auto;
+}
+
+.customSideBarPushable {
+   background-color: #333333 !important;
+   width: 23em !important;
 }
 
 .customContainer {
@@ -17,13 +25,18 @@
     background-repeat: no-repeat !important;
     background-size: cover !important;
     height: 100% !important;
+    overflow: auto;
 }
 
 .customCard {
-    margin: 30px 0 0 40px !important;
+    margin: 10px 0 0 10px !important;
     padding: 10px !important;
     background-color: #f6f6f6 !important;
     width: 300px !important;
+}
+
+.cardTitle:hover {
+    cursor: pointer;
 }
 
 .customItem {
@@ -47,8 +60,8 @@
     width: 18em;
     border-radius: 2px !important;
     position: relative;
-    top: 2.2em;
-    margin-left: 3.9em !important;
+    top: 0.8em;
+    margin-left: 1.9em !important;
 }
 
 .createNewCardForm {
@@ -57,8 +70,8 @@
     width: 21.2em;
     border-radius: 3px !important;
     position: relative;
-    top: 2.2em;
-    left: 4em ;
+    top: 0.8em;
+    left: 1.9em ;
     padding: 1em
 }
 
@@ -83,4 +96,16 @@
 
 .deleteRecordIcon:hover {
     background-color: rgb(228, 228, 228);
+}
+
+.customMenu {
+    background-color: #ff5a5c !important;
+}
+
+.customMenu #navbarButton, .customMenu #navbarLink{
+    color: white !important;
+}
+
+.customMenu #navbarButton:hover {
+    background-color: #ff8e90 !important;
 }
