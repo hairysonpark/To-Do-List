@@ -52,6 +52,7 @@ class CardGroup extends React.Component {
 		}
 	};
 
+<<<<<<< HEAD
 	/* If the user click the sign out button in firebase's index.js,
 	 * The sign out button function will sent a logout signal to NavSidebar and re-render
 	 * The signal will then pass to this component as a prop and update this component
@@ -85,6 +86,9 @@ class CardGroup extends React.Component {
 	};
 
 	onDataSubmit = async (columnId, title, description) => {
+=======
+	onDataSubmit = (columnId, title, description, done = 'false') => {
+>>>>>>> 1350ee62d6b1dbb2a755e2bb67d6016bcd9e16b0
 		let currentTaskTotal = this.state.totalTasks; // Get total number of tasks
 		let newTaskId = "task-" + (currentTaskTotal + 1); // Create new task id. e.g., task-5
 		let newTaskObject = {
@@ -92,6 +96,7 @@ class CardGroup extends React.Component {
 			id: newTaskId,
 			title: title,
 			description: description,
+			done: done,
 		};
 
 		let entireObjectCopy = { ...this.state }; // Copy entire data structure to a new variable. dummy way, but it works
@@ -255,8 +260,13 @@ class CardGroup extends React.Component {
 		/* Delete the object in data.js-> columns -> object */
 		delete newState.columns[column.id];
 
+<<<<<<< HEAD
 		/* Find out this column id is corrspond to which index in the columnOrder array */
 		const indexOfColumn = newState.columnOrder.indexOf(column.id);
+=======
+		/* Find out this column id is correspond to which index in the columnOrder array */
+		const indexOfColumn = newState.columnOrder.indexOf(column.id)
+>>>>>>> 1350ee62d6b1dbb2a755e2bb67d6016bcd9e16b0
 
 		/* Remove the column id in columnOrder by its index */
 		newState.columnOrder.splice(indexOfColumn, 1);

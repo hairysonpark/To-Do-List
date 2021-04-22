@@ -19,6 +19,7 @@ class ToDoCard extends React.Component {
 		deleteCardConfirmOpen: false,
 		editCardTitleOpen: false,
 		newTitleValue: "",
+		showCompleteTasks: false
 	};
 
 	onButtonSubmit = (title, description) => {
@@ -83,11 +84,19 @@ class ToDoCard extends React.Component {
 									text="Delete"
 									onClick={() => this.setState({ deleteCardConfirmOpen: true })}
 								/>
+								<Dropdown.Item
+									icon="checkmark"
+									text="Show Completed"
+									onClick={
+										() => this.setState({ showCompleteTasks: !this.state.showCompleteTasks})
+									}
+								/>
 							</Dropdown.Menu>
 						</Dropdown>
 					</div>
 				</Menu.Item>
-				{this.props.tasks.map((task, index) => {
+				{ /* Display all completed tasks */
+				this.props.tasks.filter( (task) => this.state.showCompleteTasks || (task.done === 'false')).map((task, index) => {
 					return (
 						<Draggable draggableId={task.id} index={index} key={task.id}>
 							{(provided) => (
@@ -104,6 +113,11 @@ class ToDoCard extends React.Component {
 										<Menu.Item className="customItem">
 											<div>
 												<h4 className="itemTitleRow">
+													{ /* TODOs:
+															refactor into separate component
+															change state with onCheck
+															make checkbox match the 'done' field of the task
+													*/}
 													<Checkbox label={task.title} />
 													<Icon
 														name="delete"
