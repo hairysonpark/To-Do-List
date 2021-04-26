@@ -13,50 +13,62 @@ import { Draggable } from "react-beautiful-dnd";
 import "../styles/styles.css";
 import CreatePopup from "./CreatePopup";
 import EditPopup from "./EditPopup";
+import CompletedTasksModal from "./CompletedTasksModal";
 
 class ToDoCard extends React.Component {
 	state = {
 		deleteCardConfirmOpen: false,
 		editCardTitleOpen: false,
 		newTitleValue: "",
-		showCompleteTasks: false
+		showCompleteTasks: false,
+	};
+
+	componentDidMount = () => {
+		this.setState({ newTitleValue: this.props.column.title });
 	};
 
 	onButtonSubmit = (title, description) => {
 		this.props.onDataSubmit(this.props.column.id, title, description); // call CardGroup function
 	};
 
+	onUndoButtonClick = (task) => {
+		this.props.onUndoButtonClick(task, this.props.column.id);
+	}
+
 	deleteCard = () => {
 		this.setState({ deleteCardConfirmOpen: false });
 		this.props.deleteCard(this.props.column);
 	};
 
-	renderEditCardTitle = (
-		<div>
-			<Input
-				autoFocus
-				icon="edit"
-				placeholder="new name"
-				onChange={(e) => this.setState({ newTitleValue: e.target.value })}
-				onKeyPress={(e) => {
-					if (e.key === "Enter") {
-						let {column} = this.props;
-						column.title = this.state.newTitleValue;
-						this.props.editTitle(column);
-						this.setState({ editCardTitleOpen: false })
-					}
-				}}
-				onBlur={() => this.setState({ editCardTitleOpen: false })}
-				style={{ width: "14em", height: "2.2em"}}
-			/>
-			<Icon
-				className="createNewCardExitIcon"
-				name="close"
-				size="large"
-				onClick={() => this.setState({ editCardTitleOpen: false })}
-			/>
-		</div>
-	);
+	renderEditCardTitle = () => {
+		return (
+			<div>
+				<Input
+					autoFocus
+					icon="edit"
+					placeholder="new name"
+					onChange={(e) => this.setState({ newTitleValue: e.target.value })}
+					value={this.state.newTitleValue}
+					onKeyPress={(e) => {
+						if (e.key === "Enter") {
+							let { column } = this.props;
+							column.title = this.state.newTitleValue;
+							this.props.editTitle(column);
+							this.setState({ editCardTitleOpen: false });
+						}
+					}}
+					onBlur={() => this.setState({ editCardTitleOpen: false })}
+					style={{ width: "14em", height: "2.2em" }}
+				/>
+				<Icon
+					className="createNewCardExitIcon"
+					name="close"
+					size="large"
+					onClick={() => this.setState({ editCardTitleOpen: false })}
+				/>
+			</div>
+		);
+	};
 
 	render() {
 		return (
@@ -70,9 +82,12 @@ class ToDoCard extends React.Component {
 					<div className="itemTitleRow">
 						<b>
 							{this.state.editCardTitleOpen ? (
-								this.renderEditCardTitle
+								this.renderEditCardTitle()
 							) : (
-								<p className="cardTitle" onClick={() => this.setState({ editCardTitleOpen: true })}>
+								<p
+									className="cardTitle"
+									onClick={() => this.setState({ editCardTitleOpen: true })}
+								>
 									{this.props.column.title}
 								</p>
 							)}
@@ -84,56 +99,76 @@ class ToDoCard extends React.Component {
 									text="Delete"
 									onClick={() => this.setState({ deleteCardConfirmOpen: true })}
 								/>
-								<Dropdown.Item
-									icon="checkmark"
-									text="Show Completed"
-									onClick={
-										() => this.setState({ showCompleteTasks: !this.state.showCompleteTasks})
-									}
-								/>
+								<CompletedTasksModal onUndoButtonClick={this.onUndoButtonClick}>
+									<Dropdown.Item
+										icon="checkmark"
+										text="Show Completed"
+									/>
+								</CompletedTasksModal>
 							</Dropdown.Menu>
 						</Dropdown>
 					</div>
 				</Menu.Item>
-				{ /* Display all completed tasks */
-				this.props.tasks.filter( (task) => this.state.showCompleteTasks || (task.done === 'false')).map((task, index) => {
-					return (
-						<Draggable draggableId={task.id} index={index} key={task.id}>
-							{(provided) => (
-								<div
-									{...provided.draggableProps}
-									{...provided.dragHandleProps}
-									ref={provided.innerRef}
-								>
-									<EditPopup
-										task={task}
-										editRecord={this.props.editRecord}
-										deleteRecord={this.props.deleteRecord}
-									>
-										<Menu.Item className="customItem">
-											<div>
-												<h4 className="itemTitleRow">
-													{ /* TODOs:
+				{
+					/* Display all completed tasks */
+					this.props.tasks
+						/*.filter(
+							(task) => this.state.showCompleteTasks || task.done === "false"
+						)*/
+						.map((task, index) => {
+							return (
+								<Draggable draggableId={task.id} index={index} key={task.id}>
+									{(provided) => (
+										<div
+											{...provided.draggableProps}
+											{...provided.dragHandleProps}
+											ref={provided.innerRef}
+										>
+											<EditPopup
+												task={task}
+												editRecord={this.props.editRecord}
+												deleteRecord={this.props.deleteRecord}
+											>
+												<Menu.Item className="customItem">
+													<div
+													/* Cross out the task if it is marked as done */
+														style={{
+															textDecoration: task.done
+																? "line-through"
+																: "none",
+															opacity: task.done
+																? "50%"
+																: "100%"
+														}}
+													>
+														<h4 className="itemTitleRow">
+															{/* TODOs:
 															refactor into separate component
 															change state with onCheck
 															make checkbox match the 'done' field of the task
-													*/}
-													<Checkbox label={task.title} />
-													<Icon
-														name="delete"
-														className="deleteRecordIcon"
-														onClick={() => this.props.deleteRecord(task)}
-													/>
-												</h4>
-												<p>{task.description}</p>
-											</div>
-										</Menu.Item>
-									</EditPopup>
-								</div>
-							)}
-						</Draggable>
-					);
-				})}
+															*/}
+															<Checkbox
+																label={task.title}
+																onClick={(e, data) =>
+																	this.props.putToCompleted(e, data, task)
+																}
+															/>
+															<Icon
+																name="delete"
+																className="deleteRecordIcon"
+																onClick={() => this.props.deleteRecord(task)}
+															/>
+														</h4>
+														<p>{task.description}</p>
+													</div>
+												</Menu.Item>
+											</EditPopup>
+										</div>
+									)}
+								</Draggable>
+							);
+						})
+				}
 				{this.props.placeholderAtEndOfList}
 				<Menu.Item>
 					<Input fluid action color="green">

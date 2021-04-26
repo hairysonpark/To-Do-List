@@ -8,7 +8,7 @@ class PhotoSearch extends React.Component {
 
 	onSearchSubmit = async (term) => {
 		const responce = await unsplash.get("/search/photos", {
-			params: { query: term, orientation: 'landscape' },
+			params: { query: term, orientation: 'landscape', per_page: 30 },
 		});
 
 		this.setState({ pics: responce.data.results });

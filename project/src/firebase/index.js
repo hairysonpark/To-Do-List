@@ -11,7 +11,7 @@ class Firebase extends React.Component {
 	state = { user: null, docData: null };
 
 	notify = () =>
-		toast.warn(googleSignInLink, {
+		toast.warn(googleSignInWarning, {
 			position: "bottom-right",
 			autoClose: 10000,
 			hideProgressBar: false,
@@ -40,7 +40,7 @@ class Firebase extends React.Component {
 			if (!user) {
 				this.setState({ user: null });
 
-				/* Notify user */
+				/* Notify user to signIn with Google */
 				this.notify();
 				this.props.userSignedOutWithGoogle(true);
 			} else {
@@ -139,7 +139,7 @@ class Firebase extends React.Component {
 	}
 }
 
-const googleSignInLink = (
+const googleSignInWarning = (
 	<div>
 		<p>Warning! Please sign in with Google to save your progress.</p>
 		<Button

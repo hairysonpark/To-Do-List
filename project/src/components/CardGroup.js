@@ -1,9 +1,9 @@
 import React from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { Button, Icon, Form, Dimmer, Loader } from "semantic-ui-react";
+import { toast } from "react-toastify";
 
 import ToDoCard from "./ToDoCard";
-import data from "../data/data";
 import "../styles/styles.css";
 
 const emptyTemplate = {
@@ -52,7 +52,6 @@ class CardGroup extends React.Component {
 		}
 	};
 
-<<<<<<< HEAD
 	/* If the user click the sign out button in firebase's index.js,
 	 * The sign out button function will sent a logout signal to NavSidebar and re-render
 	 * The signal will then pass to this component as a prop and update this component
@@ -85,10 +84,7 @@ class CardGroup extends React.Component {
 		}
 	};
 
-	onDataSubmit = async (columnId, title, description) => {
-=======
-	onDataSubmit = (columnId, title, description, done = 'false') => {
->>>>>>> 1350ee62d6b1dbb2a755e2bb67d6016bcd9e16b0
+	onDataSubmit = async (columnId, title, description, done = false) => {
 		let currentTaskTotal = this.state.totalTasks; // Get total number of tasks
 		let newTaskId = "task-" + (currentTaskTotal + 1); // Create new task id. e.g., task-5
 		let newTaskObject = {
@@ -97,6 +93,7 @@ class CardGroup extends React.Component {
 			title: title,
 			description: description,
 			done: done,
+			deleted: false
 		};
 
 		let entireObjectCopy = { ...this.state }; // Copy entire data structure to a new variable. dummy way, but it works
@@ -105,6 +102,7 @@ class CardGroup extends React.Component {
 		entireObjectCopy.totalTasks = ++currentTaskTotal; // Increment the total number of tasks
 
 		this.setState({ ...entireObjectCopy }); // Destructure the object and update
+		
 		await this.props.firebaseSetDataFunc(entireObjectCopy);
 	};
 
@@ -211,6 +209,17 @@ class CardGroup extends React.Component {
 	};
 
 	deleteRecord = async (taskObject) => {
+		const notify = () =>
+			toast.success("One task was deleted successfully.", {
+				position: "bottom-right",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: false,
+				draggable: true,
+				progress: undefined,
+			});
+
 		let columns = { ...this.state.columns };
 		let columnId = "";
 
@@ -227,12 +236,11 @@ class CardGroup extends React.Component {
 			});
 		});
 
+		/* Find the correspond column and remove the task from that column 
+		 * And set deleted: true in the task field
+		 */
 		const newState = {
 			...this.state,
-			tasks: {
-				...this.state.tasks,
-				[taskObject.id]: {}, // clear the value, but the key still there
-			},
 			columns: {
 				...this.state.columns,
 				[columnId]: {
@@ -245,8 +253,17 @@ class CardGroup extends React.Component {
 					}),
 				},
 			},
+			tasks: {
+				...this.state.tasks,
+				[taskObject.id]: {
+					...this.state.tasks[taskObject.id],
+					deleted: true
+				}
+			}
 		};
 
+		/* @local function: notify user the task was deleted */
+		notify();
 		this.setState(newState);
 		await this.props.firebaseSetDataFunc(newState);
 	};
@@ -260,13 +277,8 @@ class CardGroup extends React.Component {
 		/* Delete the object in data.js-> columns -> object */
 		delete newState.columns[column.id];
 
-<<<<<<< HEAD
 		/* Find out this column id is corrspond to which index in the columnOrder array */
 		const indexOfColumn = newState.columnOrder.indexOf(column.id);
-=======
-		/* Find out this column id is correspond to which index in the columnOrder array */
-		const indexOfColumn = newState.columnOrder.indexOf(column.id)
->>>>>>> 1350ee62d6b1dbb2a755e2bb67d6016bcd9e16b0
 
 		/* Remove the column id in columnOrder by its index */
 		newState.columnOrder.splice(indexOfColumn, 1);
@@ -276,21 +288,57 @@ class CardGroup extends React.Component {
 		await this.props.firebaseSetDataFunc(newState);
 	};
 
-	addNewListItem = async () => {
+	onUndoButtonClick = async (/*FromToDoCard*/taskId, columnId) => {
+		const notify = () =>
+			toast.success("One task was recovered successfully.", {
+				position: "bottom-right",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: false,
+				draggable: true,
+				progress: undefined,
+			});
+
+		const newState = {
+			...this.state,
+			tasks: {
+				...this.state.tasks,
+				[taskId]: {
+					...this.state.tasks[taskId],
+					deleted: false
+				}
+			},
+			columns: {
+				...this.state.columns,
+				[columnId]: {
+					...this.state.columns[columnId],
+					taskIds: [...this.state.columns[columnId].taskIds, taskId]
+				}
+			}
+		}
+
+		notify();
+
+		this.setState(newState)
+		await this.props.firebaseSetDataFunc(newState);
+	}
+
+	createNewCard = async () => {
 		/* add new item to the column order array */
-		let newColumnOrder = [...this.state.columnOrder, this.state.newListName];
+		let newId = `list-${this.state.columnOrder.length + 1}`
 
 		const newState = {
 			...this.state,
 			columns: {
 				...this.state.columns,
-				[this.state.newListName]: {
-					id: this.state.newListName,
+				[newId]: {
+					id: newId,
 					title: `${this.state.newListName}`,
 					taskIds: [],
 				},
 			},
-			columnOrder: newColumnOrder,
+			columnOrder: [...this.state.columnOrder, newId],
 			createCardButtonOpen: false,
 			newListName: "",
 		};
@@ -324,7 +372,7 @@ class CardGroup extends React.Component {
 						icon
 						positive
 						labelPosition="right"
-						onClick={() => this.addNewListItem()}
+						onClick={() => this.createNewCard()}
 					>
 						Add
 						<Icon name="plus" />
@@ -339,6 +387,28 @@ class CardGroup extends React.Component {
 				</Form.Field>
 			</Form>
 		);
+	};
+
+	putToCompleted = async (e, data, taskObject) => {
+		/* pervent checkbox trigger parent onClick event */
+		e.stopPropagation();
+
+		if (data.checked) {
+			taskObject.done = true;
+		} else {
+			taskObject.done = false;
+		}
+
+		let newState = {
+			...this.state,
+			tasks: {
+				...this.state.tasks,
+				[taskObject.id]: taskObject,
+			},
+		};
+
+		this.setState(newState);
+		await this.props.firebaseSetDataFunc(newState);
 	};
 
 	render() {
@@ -368,6 +438,8 @@ class CardGroup extends React.Component {
 											editTitle={this.editTitle}
 											deleteRecord={this.deleteRecord}
 											deleteCard={this.deleteCard}
+											putToCompleted={this.putToCompleted}
+											onUndoButtonClick={this.onUndoButtonClick}
 										/>
 									</div>
 								)}
