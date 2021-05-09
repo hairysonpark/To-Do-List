@@ -55,16 +55,18 @@ class Firebase extends React.Component {
 	};
 
 	getDatafromFirebase = async () => {
-		try {
-			const result = await this.database
-				.collection("toDoList")
-				.doc(this.state.user.uid)
-				.get();
+		if (this.state.user) {
+			try {
+				const result = await this.database
+					.collection("toDoList")
+					.doc(this.state.user.uid)
+					.get();
 
-			const data = result.data();
-			return data;
-		} catch (e) {
-			console.log(e);
+				const data = result.data();
+				return data;
+			} catch (e) {
+				console.log(e);
+			}
 		}
 	};
 
@@ -142,10 +144,7 @@ class Firebase extends React.Component {
 const googleSignInWarning = (
 	<div>
 		<p>Warning! Please sign in with Google to save your progress.</p>
-		<Button
-			fluid
-			className="ui red google button"
-		>
+		<Button fluid className="ui red google button">
 			<Icon name="google" />
 			Sign In with Google
 		</Button>

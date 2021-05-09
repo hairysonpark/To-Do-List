@@ -149,6 +149,7 @@ class ToDoCard extends React.Component {
 															*/}
 															<Checkbox
 																label={task.title}
+																checked={task.done}
 																onClick={(e, data) =>
 																	this.props.putToCompleted(e, data, task)
 																}

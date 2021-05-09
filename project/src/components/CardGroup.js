@@ -209,8 +209,17 @@ class CardGroup extends React.Component {
 	};
 
 	deleteRecord = async (taskObject) => {
+		const notifyComponent = () => {
+			return (
+				<div style={{display: "flex"}}>
+					<Icon name="delete" size="large" />
+					<p>One task was deleted successfully.</p>
+				</div>
+			)
+		}
+
 		const notify = () =>
-			toast.success("One task was deleted successfully.", {
+			toast.success(notifyComponent(), {
 				position: "bottom-right",
 				autoClose: 5000,
 				hideProgressBar: false,

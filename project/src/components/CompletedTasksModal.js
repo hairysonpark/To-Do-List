@@ -9,7 +9,6 @@ class CompletedTasksModal extends React.Component {
 	retrieveTaskList = async () => {
 		/* User has to be signed in */
 		if (!firebase.auth().currentUser) {
-			alert("You haven't sign in yet.");
 			return;
 		}
 
