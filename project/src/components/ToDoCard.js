@@ -99,10 +99,15 @@ class ToDoCard extends React.Component {
 									text="Delete"
 									onClick={() => this.setState({ deleteCardConfirmOpen: true })}
 								/>
-								<CompletedTasksModal onUndoButtonClick={this.onUndoButtonClick}>
-									<Dropdown.Item
+								<Dropdown.Item
 										icon="checkmark"
-										text="Show Completed"
+										text="Show Completed Tasks in List"
+										onClick={() => this.setState({ showCompleteTasks: !this.state.showCompleteTasks })}
+									/>
+								<CompletedTasksModal onUndoButtonClick={this.onUndoButtonClick}>
+								<Dropdown.Item
+										icon="checkmark"
+										text="Show Deleted Tasks in Popup"
 									/>
 								</CompletedTasksModal>
 							</Dropdown.Menu>
@@ -112,9 +117,9 @@ class ToDoCard extends React.Component {
 				{
 					/* Display all completed tasks */
 					this.props.tasks
-						/*.filter(
-							(task) => this.state.showCompleteTasks || task.done === "false"
-						)*/
+						.filter(
+							(task) => this.state.showCompleteTasks || task.done == false
+						)
 						.map((task, index) => {
 							return (
 								<Draggable draggableId={task.id} index={index} key={task.id}>
@@ -153,6 +158,7 @@ class ToDoCard extends React.Component {
 																onClick={(e, data) =>
 																	this.props.putToCompleted(e, data, task)
 																}
+																checked = {task.done}
 															/>
 															<Icon
 																name="delete"
