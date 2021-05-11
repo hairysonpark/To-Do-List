@@ -24,7 +24,10 @@ class ToDoCard extends React.Component {
 	};
 
 	componentDidMount = () => {
-		this.setState({ newTitleValue: this.props.column.title });
+		this.setState({
+			newTitleValue: this.props.column.title,
+			showCompleteTasks: this.props.showCompleteTasks,
+		});
 	};
 
 	onButtonSubmit = (title, description) => {
@@ -33,11 +36,19 @@ class ToDoCard extends React.Component {
 
 	onUndoButtonClick = (task) => {
 		this.props.onUndoButtonClick(task, this.props.column.id);
-	}
+	};
 
 	deleteCard = () => {
 		this.setState({ deleteCardConfirmOpen: false });
 		this.props.deleteCard(this.props.column);
+	};
+
+	onShowCompleteTasksCheckboxClick = () => {
+		this.props.onShowCompleteTasksCheckboxClick();
+
+		this.setState({
+			showCompleteTasks: !this.state.showCompleteTasks,
+		});
 	};
 
 	renderEditCardTitle = () => {
@@ -99,15 +110,27 @@ class ToDoCard extends React.Component {
 									text="Delete"
 									onClick={() => this.setState({ deleteCardConfirmOpen: true })}
 								/>
-								<Dropdown.Item
-										icon="checkmark"
-										text="Show Completed Tasks in List"
-										onClick={() => this.setState({ showCompleteTasks: !this.state.showCompleteTasks })}
-									/>
+								<Dropdown.Item									
+									onClick={(e) => this.onShowCompleteTasksCheckboxClick()}
+								>
+									<div>
+										<Checkbox
+											checked={this.state.showCompleteTasks}
+											onMouseDown={(e) =>
+												this.onShowCompleteTasksCheckboxClick()
+											}
+										/>
+										<span style={{margin: "0 10px", verticalAlign: "text-top"}}>
+											{this.state.showCompleteTasks
+												? "Hide Completed Tasks"
+												: "Show Completed Tasks"}
+										</span>
+									</div>
+								</Dropdown.Item>
 								<CompletedTasksModal onUndoButtonClick={this.onUndoButtonClick}>
-								<Dropdown.Item
-										icon="checkmark"
-										text="Show Deleted Tasks in Popup"
+									<Dropdown.Item
+										icon="archive"
+										text="Show Deleted Tasks"
 									/>
 								</CompletedTasksModal>
 							</Dropdown.Menu>
@@ -136,14 +159,12 @@ class ToDoCard extends React.Component {
 											>
 												<Menu.Item className="customItem">
 													<div
-													/* Cross out the task if it is marked as done */
+														/* Cross out the task if it is marked as done */
 														style={{
 															textDecoration: task.done
 																? "line-through"
 																: "none",
-															opacity: task.done
-																? "50%"
-																: "100%"
+															opacity: task.done ? "50%" : "100%",
 														}}
 													>
 														<h4 className="itemTitleRow">
@@ -158,7 +179,7 @@ class ToDoCard extends React.Component {
 																onClick={(e, data) =>
 																	this.props.putToCompleted(e, data, task)
 																}
-																checked = {task.done}
+																checked={task.done}
 															/>
 															<Icon
 																name="delete"

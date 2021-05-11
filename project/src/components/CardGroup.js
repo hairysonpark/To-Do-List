@@ -13,6 +13,7 @@ const emptyTemplate = {
 	totalTasks: 0,
 	createCardButtonOpen: false,
 	newListName: "",
+	showCompleteTasks: true,
 	imageURL:
 		"https://images.pexels.com/photos/1103970/pexels-photo-1103970.jpeg?cs=srgb&dl=pexels-johannes-plenio-1103970.jpg&fm=jpg",
 };
@@ -212,7 +213,7 @@ class CardGroup extends React.Component {
 		const notifyComponent = () => {
 			return (
 				<div style={{display: "flex"}}>
-					<Icon name="delete" size="large" />
+					<Icon name="trash" size="large"/>
 					<p>One task was deleted successfully.</p>
 				</div>
 			)
@@ -221,7 +222,7 @@ class CardGroup extends React.Component {
 		const notify = () =>
 			toast.success(notifyComponent(), {
 				position: "bottom-right",
-				autoClose: 5000,
+				autoClose: 3000,
 				hideProgressBar: false,
 				closeOnClick: true,
 				pauseOnHover: false,
@@ -298,10 +299,19 @@ class CardGroup extends React.Component {
 	};
 
 	onUndoButtonClick = async (/*FromToDoCard*/taskId, columnId) => {
+		const notifyComponent = () => {
+			return (
+				<div style={{display: "flex"}}>
+					<Icon name="undo alternate" size="large"/>
+					<p>One task was recovered successfully.</p>
+				</div>
+			)
+		}
+
 		const notify = () =>
-			toast.success("One task was recovered successfully.", {
+			toast.success(notifyComponent(), {
 				position: "bottom-right",
-				autoClose: 5000,
+				autoClose: 3000,
 				hideProgressBar: false,
 				closeOnClick: true,
 				pauseOnHover: false,
@@ -402,8 +412,30 @@ class CardGroup extends React.Component {
 		/* pervent checkbox trigger parent onClick event */
 		e.stopPropagation();
 
+		const notifyComponent = () => {
+			return (
+				<div style={{display: "flex"}}>
+					<Icon name="archive" size="large" />
+					<p>One task was marked as completed.</p>
+				</div>
+			)
+		}
+
+		const notify = () =>
+			toast.success(notifyComponent(), {
+				position: "bottom-right",
+				autoClose: 3000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: false,
+				draggable: true,
+				progress: undefined,
+			});
+
 		if (data.checked) {
 			taskObject.done = true;
+			/* Only notify user when a task is marked as completed */
+			notify();
 		} else {
 			taskObject.done = false;
 		}
@@ -419,6 +451,16 @@ class CardGroup extends React.Component {
 		this.setState(newState);
 		await this.props.firebaseSetDataFunc(newState);
 	};
+
+	onShowCompleteTasksCheckboxClick = async () => {
+		let newState = {
+			...this.state,
+			showCompleteTasks: !this.state.showCompleteTasks
+		};
+
+		this.setState(newState);
+		await this.props.firebaseSetDataFunc(newState);
+	}
 
 	render() {
 		return (
@@ -441,6 +483,7 @@ class CardGroup extends React.Component {
 											className="card"
 											column={column}
 											tasks={tasks}
+											showCompleteTasks={this.state.showCompleteTasks}
 											onDataSubmit={this.onDataSubmit}
 											placeholderAtEndOfList={provided.placeholder}
 											editRecord={this.editRecord}
@@ -449,6 +492,7 @@ class CardGroup extends React.Component {
 											deleteCard={this.deleteCard}
 											putToCompleted={this.putToCompleted}
 											onUndoButtonClick={this.onUndoButtonClick}
+											onShowCompleteTasksCheckboxClick={this.onShowCompleteTasksCheckboxClick}
 										/>
 									</div>
 								)}
