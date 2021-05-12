@@ -26,7 +26,6 @@ class SearchBar extends React.Component {
 						<div style={{ textAlign: "right", marginTop: "20px" }}>
 							<Button
 								type="button"
-								color="white"
 								onClick={() => this.props.onCloseButtonClick()}
 								style={{ marginRight: "20px" }}
 							>

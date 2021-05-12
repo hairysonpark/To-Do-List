@@ -70,16 +70,23 @@ class Firebase extends React.Component {
 		}
 	};
 
-	setDataToFirebase = async (data) => {
+	setDataToFirebase = async (data, update = false) => {
 		const firebaseData = data;
 
 		/* Data will only be submitted to firestore if user is logined */
 		if (this.state.user) {
 			try {
-				const result = await this.database
-					.collection("toDoList")
-					.doc(this.state.user.uid)
-					.set(firebaseData);
+				if (update) {
+					const result = await this.database
+						.collection("toDoList")
+						.doc(this.state.user.uid)
+						.update(firebaseData);
+				} else {
+					const result = await this.database
+						.collection("toDoList")
+						.doc(this.state.user.uid)
+						.set(firebaseData);
+				}
 			} catch (e) {
 				console.log(e);
 			}

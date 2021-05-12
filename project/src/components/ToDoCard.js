@@ -30,6 +30,12 @@ class ToDoCard extends React.Component {
 		});
 	};
 
+	componentDidUpdate = (prevProps) => {
+		if (prevProps !== this.props) {
+			this.setState({showCompleteTasks: this.props.showCompleteTasks})
+		}
+	};
+
 	onButtonSubmit = (title, description) => {
 		this.props.onDataSubmit(this.props.column.id, title, description); // call CardGroup function
 	};
@@ -107,10 +113,10 @@ class ToDoCard extends React.Component {
 							<Dropdown.Menu>
 								<Dropdown.Item
 									icon="trash"
-									text="Delete"
+									text="Delete this list"
 									onClick={() => this.setState({ deleteCardConfirmOpen: true })}
 								/>
-								<Dropdown.Item									
+								<Dropdown.Item
 									onClick={(e) => this.onShowCompleteTasksCheckboxClick()}
 								>
 									<div>
@@ -120,7 +126,9 @@ class ToDoCard extends React.Component {
 												this.onShowCompleteTasksCheckboxClick()
 											}
 										/>
-										<span style={{margin: "0 10px", verticalAlign: "text-top"}}>
+										<span
+											style={{ margin: "0 10px", verticalAlign: "text-top" }}
+										>
 											{this.state.showCompleteTasks
 												? "Hide Completed Tasks"
 												: "Show Completed Tasks"}
@@ -128,10 +136,7 @@ class ToDoCard extends React.Component {
 									</div>
 								</Dropdown.Item>
 								<CompletedTasksModal onUndoButtonClick={this.onUndoButtonClick}>
-									<Dropdown.Item
-										icon="archive"
-										text="Show Deleted Tasks"
-									/>
+									<Dropdown.Item icon="archive" text="Show Deleted Tasks" />
 								</CompletedTasksModal>
 							</Dropdown.Menu>
 						</Dropdown>

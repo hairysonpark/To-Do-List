@@ -14,8 +14,6 @@ const emptyTemplate = {
 	createCardButtonOpen: false,
 	newListName: "",
 	showCompleteTasks: true,
-	imageURL:
-		"https://images.pexels.com/photos/1103970/pexels-photo-1103970.jpeg?cs=srgb&dl=pexels-johannes-plenio-1103970.jpg&fm=jpg",
 };
 
 class CardGroup extends React.Component {
@@ -40,7 +38,10 @@ class CardGroup extends React.Component {
 			if (!nextProps.userSignedOutWithGoogle) {
 				/* User has data in the firestore */
 				if (nextProps.firebaseData !== undefined) {
-					this.setState(nextProps.firebaseData);
+					let state = nextProps.firebaseData;
+					delete state.imageURL;
+
+					this.setState(state);
 				} else if (
 					/* User has create something but nothing was found in the firestore*/
 					this.state !== emptyTemplate &&
@@ -94,7 +95,7 @@ class CardGroup extends React.Component {
 			title: title,
 			description: description,
 			done: done,
-			deleted: false
+			deleted: false,
 		};
 
 		let entireObjectCopy = { ...this.state }; // Copy entire data structure to a new variable. dummy way, but it works
@@ -103,8 +104,8 @@ class CardGroup extends React.Component {
 		entireObjectCopy.totalTasks = ++currentTaskTotal; // Increment the total number of tasks
 
 		this.setState({ ...entireObjectCopy }); // Destructure the object and update
-		
-		await this.props.firebaseSetDataFunc(entireObjectCopy);
+
+		await this.props.firebaseSetDataFunc(entireObjectCopy, true);
 	};
 
 	componentDidUpdate() {
@@ -153,7 +154,7 @@ class CardGroup extends React.Component {
 				},
 			};
 			this.setState(newState);
-			await this.props.firebaseSetDataFunc(newState);
+			await this.props.firebaseSetDataFunc(newState, true);
 		} // If the item is drag and drop on different column
 		else {
 			newSourceTaskIds.splice(source.index, 1);
@@ -178,7 +179,7 @@ class CardGroup extends React.Component {
 				},
 			};
 			this.setState(newState);
-			await this.props.firebaseSetDataFunc(newState);
+			await this.props.firebaseSetDataFunc(newState, true);
 		}
 	};
 
@@ -191,7 +192,7 @@ class CardGroup extends React.Component {
 			},
 		};
 		this.setState(newState);
-		await this.props.firebaseSetDataFunc(newState);
+		await this.props.firebaseSetDataFunc(newState, true);
 	};
 
 	editTitle = async (taskObject) => {
@@ -206,18 +207,18 @@ class CardGroup extends React.Component {
 			},
 		};
 		this.setState(newState);
-		await this.props.firebaseSetDataFunc(newState);
+		await this.props.firebaseSetDataFunc(newState, true);
 	};
 
 	deleteRecord = async (taskObject) => {
 		const notifyComponent = () => {
 			return (
-				<div style={{display: "flex"}}>
-					<Icon name="trash" size="large"/>
+				<div style={{ display: "flex" }}>
+					<Icon name="trash" size="large" />
 					<p>One task was deleted successfully.</p>
 				</div>
-			)
-		}
+			);
+		};
 
 		const notify = () =>
 			toast.success(notifyComponent(), {
@@ -246,7 +247,7 @@ class CardGroup extends React.Component {
 			});
 		});
 
-		/* Find the correspond column and remove the task from that column 
+		/* Find the correspond column and remove the task from that column
 		 * And set deleted: true in the task field
 		 */
 		const newState = {
@@ -267,15 +268,15 @@ class CardGroup extends React.Component {
 				...this.state.tasks,
 				[taskObject.id]: {
 					...this.state.tasks[taskObject.id],
-					deleted: true
-				}
-			}
+					deleted: true,
+				},
+			},
 		};
 
 		/* @local function: notify user the task was deleted */
 		notify();
 		this.setState(newState);
-		await this.props.firebaseSetDataFunc(newState);
+		await this.props.firebaseSetDataFunc(newState, true);
 	};
 
 	deleteCard = async (column) => {
@@ -295,18 +296,18 @@ class CardGroup extends React.Component {
 
 		/* Update state */
 		this.setState(newState);
-		await this.props.firebaseSetDataFunc(newState);
+		await this.props.firebaseSetDataFunc(newState, true);
 	};
 
-	onUndoButtonClick = async (/*FromToDoCard*/taskId, columnId) => {
+	onUndoButtonClick = async (/*FromToDoCard*/ taskId, columnId) => {
 		const notifyComponent = () => {
 			return (
-				<div style={{display: "flex"}}>
-					<Icon name="undo alternate" size="large"/>
+				<div style={{ display: "flex" }}>
+					<Icon name="undo alternate" size="large" />
 					<p>One task was recovered successfully.</p>
 				</div>
-			)
-		}
+			);
+		};
 
 		const notify = () =>
 			toast.success(notifyComponent(), {
@@ -325,27 +326,42 @@ class CardGroup extends React.Component {
 				...this.state.tasks,
 				[taskId]: {
 					...this.state.tasks[taskId],
-					deleted: false
-				}
+					deleted: false,
+				},
 			},
 			columns: {
 				...this.state.columns,
 				[columnId]: {
 					...this.state.columns[columnId],
-					taskIds: [...this.state.columns[columnId].taskIds, taskId]
-				}
-			}
-		}
+					taskIds: [...this.state.columns[columnId].taskIds, taskId],
+				},
+			},
+		};
 
 		notify();
 
-		this.setState(newState)
-		await this.props.firebaseSetDataFunc(newState);
-	}
+		this.setState(newState);
+		await this.props.firebaseSetDataFunc(newState, true);
+	};
 
 	createNewCard = async () => {
-		/* add new item to the column order array */
-		let newId = `list-${this.state.columnOrder.length + 1}`
+		/* Get the last item from columnOrder. e.g., 'list-3' */
+		let temp = this.state.columnOrder.length === 0 ?
+			"list-0":
+			this.state.columnOrder[this.state.columnOrder.length - 1];
+		
+		let number = [];
+		/* Break the string into char, and extract the digit part. e.g., list-15 --> 15 */
+		[...temp].map((char) => {
+			if (char >= '0' && char <= '9')
+			number.push(char);
+		})
+
+		/* Number is a array. Need to merge them into string */
+		number = number.join('');
+		
+		/* Convert char to Int and + 1 for the next id */
+		let newId = `list-${parseInt(number, 10) + 1}`;
 
 		const newState = {
 			...this.state,
@@ -363,7 +379,7 @@ class CardGroup extends React.Component {
 		};
 
 		this.setState(newState);
-		await this.props.firebaseSetDataFunc(newState);
+		await this.props.firebaseSetDataFunc(newState, true);
 	};
 
 	renderCreateNewCardButton = () => {
@@ -414,12 +430,12 @@ class CardGroup extends React.Component {
 
 		const notifyComponent = () => {
 			return (
-				<div style={{display: "flex"}}>
+				<div style={{ display: "flex" }}>
 					<Icon name="archive" size="large" />
 					<p>One task was marked as completed.</p>
 				</div>
-			)
-		}
+			);
+		};
 
 		const notify = () =>
 			toast.success(notifyComponent(), {
@@ -449,18 +465,18 @@ class CardGroup extends React.Component {
 		};
 
 		this.setState(newState);
-		await this.props.firebaseSetDataFunc(newState);
+		await this.props.firebaseSetDataFunc(newState, true);
 	};
 
 	onShowCompleteTasksCheckboxClick = async () => {
 		let newState = {
 			...this.state,
-			showCompleteTasks: !this.state.showCompleteTasks
+			showCompleteTasks: !this.state.showCompleteTasks,
 		};
 
 		this.setState(newState);
-		await this.props.firebaseSetDataFunc(newState);
-	}
+		await this.props.firebaseSetDataFunc(newState, true);
+	};
 
 	render() {
 		return (
@@ -492,7 +508,9 @@ class CardGroup extends React.Component {
 											deleteCard={this.deleteCard}
 											putToCompleted={this.putToCompleted}
 											onUndoButtonClick={this.onUndoButtonClick}
-											onShowCompleteTasksCheckboxClick={this.onShowCompleteTasksCheckboxClick}
+											onShowCompleteTasksCheckboxClick={
+												this.onShowCompleteTasksCheckboxClick
+											}
 										/>
 									</div>
 								)}
